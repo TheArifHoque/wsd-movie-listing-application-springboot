@@ -14,9 +14,8 @@ public class UserService {
         this.users = users;
     }
 
-    public User registerUser(User user) {
+    public void registerUser(User user) {
         users.add(user);
-        return user;
     }
 
     public List<User> getUsers() {
