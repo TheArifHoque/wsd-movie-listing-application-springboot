@@ -16,6 +16,14 @@ public class MovieService {
         this.movies = movies;
     }
 
+    public void addMovie(Movie movie) {
+        movies.add(movie);
+    }
+
+    public void removeMovie(Movie movie) {
+        movies.remove(movie);
+    }
+
     public List<Movie> getMovies() {
         List<Movie> result = new ArrayList<>(movies);
         result.sort(Comparator.comparing(Movie::getTitle));
