@@ -15,6 +15,11 @@ import java.util.List;
 @Service
 public class UserService {
     private final List<User> users = new ArrayList<>();
+    private final MovieService movieService;
+
+    public UserService(MovieService movieService) {
+        this.movieService = movieService;
+    }
 
     /**
      * To create user
@@ -35,12 +40,28 @@ public class UserService {
     }
 
     /**
+     * It'll return user corresponding to the unique email
+     *
+     * @param email to identify the user
+     * @return the identified user
+     */
+    public User getUserByEmail(String email) {
+        for (User user : users) {
+            if (user.getEmail().equals(email)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Users will be able to add movies to their favorites
      *
-     * @param email to identify user
-     * @param movie they want to add in their favorites
+     * @param email   to identify user
+     * @param movieId they want to add in their favorites
      */
-    public void addMoviesToFavourites(String email, Movie movie) {
+    public void addMoviesToFavourites(String email, Integer movieId) {
+        Movie movie = movieService.getMovieById(movieId);
         User user = users.stream().filter(u -> u.getEmail().equals(email)).findFirst().orElse(null);
         if (user != null) {
             user.getFavoriteMovies().add(movie);
@@ -51,11 +72,12 @@ public class UserService {
     /**
      * Remove from favorite movies
      *
-     * @param email to identify user
-     * @param id    to identify which movie from favorites should be removed
+     * @param email   to identify user
+     * @param movieId to identify which movie from favorites should be removed
      */
-    public void removeMoviesFromFavourites(String email, Integer id) {
-        users.stream().filter(u -> u.getEmail().equals(email)).findFirst().ifPresent(user -> user.getFavoriteMovies().remove(id));
+    public void removeMoviesFromFavourites(String email, Integer movieId) {
+        Movie movie = movieService.getMovieById(movieId);
+        users.stream().filter(u -> u.getEmail().equals(email)).findFirst().ifPresent(user -> user.getFavoriteMovies().remove(movie));
     }
 
     /**
