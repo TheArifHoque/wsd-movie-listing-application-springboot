@@ -21,20 +21,41 @@ public class MovieService {
         initializeMovies();
     }
 
+    /**
+     * Add new movie
+     *
+     * @param movie to add movie
+     */
     public void addMovie(Movie movie) {
         movies.add(movie);
     }
 
+    /**
+     * Remove a movie
+     *
+     * @param id to remove movie by their id
+     */
     public void removeMovie(Integer id) {
         movies.removeIf(movie -> movie.getId().equals(id));
     }
 
+    /**
+     * Get all movies
+     *
+     * @return list of movies
+     */
     public List<Movie> getAllMovies() {
         List<Movie> result = new ArrayList<>(movies);
         result.sort(Comparator.comparing(Movie::getTitle));
         return result;
     }
 
+    /**
+     * Get movie by id
+     *
+     * @param id to identify movie by its id
+     * @return a movie if found else null
+     */
     public Movie getMovieById(Integer id) {
         for (Movie movie : movies) {
             if (movie.getId().equals(id)) {
@@ -44,6 +65,12 @@ public class MovieService {
         return null;
     }
 
+    /**
+     * Search movie by query
+     *
+     * @param query to search  movie
+     * @return list of movie(s)
+     */
     public List<Movie> searchMovies(String query) {
         List<Movie> results = new ArrayList<>();
         for (Movie movie : movies) {
@@ -58,6 +85,9 @@ public class MovieService {
         return results;
     }
 
+    /**
+     * Initialize some predefined movie
+     */
     public void initializeMovies() {
         Movie movie1 = new Movie(1, "The Shawshank Redemption", Arrays.asList("Tim Robbins", "Morgan Freeman"), "Drama", "1994-10-14", 25000000);
         Movie movie2 = new Movie(2, "The Godfather", Arrays.asList("Marlon Brando", "Al Pacino"), "Crime", "1972-03-24", 6000000);
