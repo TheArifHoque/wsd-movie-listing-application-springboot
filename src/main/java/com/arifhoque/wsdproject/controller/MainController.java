@@ -7,6 +7,7 @@ import com.arifhoque.wsdproject.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * This is main controller where endpoints are configured
+ *
+ * @author Ariful Hoque
+ */
 @RestController
 public class MainController {
     private final UserService userService;
@@ -24,7 +30,7 @@ public class MainController {
         this.movieService = movieService;
     }
 
-    @PostMapping("/user/register")
+    @PostMapping("/users/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         userService.registerUser(user);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -36,18 +42,31 @@ public class MainController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/user")
+    @GetMapping("/users/all")
     public ResponseEntity<List<User>> getUser() {
-        return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
-    @GetMapping("/movies")
+    @GetMapping("/movies/all")
     public ResponseEntity<List<Movie>> getMovies() {
-        return new ResponseEntity<>(movieService.getMovies(), HttpStatus.OK);
+        return new ResponseEntity<>(movieService.getAllMovies(), HttpStatus.OK);
     }
 
-    @GetMapping("/movies")
+    @GetMapping("/movies/search")
     public ResponseEntity<List<Movie>> searchMovies(@RequestParam("query") String query) {
+        if (query == null || query.isEmpty()) {
+            return new ResponseEntity<>(movieService.getAllMovies(), HttpStatus.OK);
+        }
+        if (movieService.searchMovies(query).isEmpty())
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(movieService.searchMovies(query), HttpStatus.OK);
+    }
+
+    @GetMapping("/movies/{id}")
+    public ResponseEntity<Movie> getMovieById(@PathVariable("id") Integer id) {
+        if (movieService.getMovieById(id) != null) {
+            return new ResponseEntity<>(movieService.getMovieById(id), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
